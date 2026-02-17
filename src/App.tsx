@@ -11,7 +11,7 @@ import { Todo } from './interfaces';
 export const App = () => {
   const preparedTodos: Todo[] = todosFromServer.map(todo => ({
     ...todo,
-    user: usersFromServer.find(user => user.id === todo.userId),
+    user: usersFromServer.find(user => user.id === todo.userId) || null,
   }));
 
   const [todos, setTodos] = useState<Todo[]>(preparedTodos);
@@ -34,14 +34,14 @@ export const App = () => {
     }
 
     if (!userCheck && !trimmedCheck) {
-      const maxId = Math.max(...todos.map(todo => todo.id));
+      const maxId = todos.length ? Math.max(...todos.map(todo => todo.id)) : 0;
       const nextId = maxId + 1;
       const newTodo: Todo = {
         id: nextId,
         title,
         completed: false,
         userId: Number(userId),
-        user: usersFromServer.find(user => user.id === Number(userId))!,
+        user: usersFromServer.find(user => user.id === Number(userId)) || null,
       };
 
       setTodos([...todos, newTodo]);
@@ -62,17 +62,19 @@ export const App = () => {
             type="text"
             data-cy="titleInput"
             value={title}
-            onChange={(event) => {
+            onChange={event => {
               setTitle(event.target.value);
               setTitleError(false);
             }}
-            placeholder='input'
+            placeholder="input"
           />
           {titleError && <span className="error">Please enter a title</span>}
         </div>
 
         <div className="field">
+          <label htmlFor="user-select">User</label>
           <select
+            id="user-select"
             data-cy="userSelect"
             value={userId}
             onChange={event => {
