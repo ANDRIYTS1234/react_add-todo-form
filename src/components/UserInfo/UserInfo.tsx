@@ -2,7 +2,7 @@ import React from 'react';
 import { UserInfoProps } from '../../interfaces';
 
 export const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
-  if (!todos) {
+  if (!user) {
     return null;
   }
 
